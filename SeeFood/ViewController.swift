@@ -21,6 +21,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         super.viewDidLoad()
         
         imagePicker.delegate = self
+        imagePicker.sourceType = .camera
+        imagePicker.allowsEditing = false
         
     }
     
@@ -66,11 +68,11 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         
-        if let image = info[.originalImage] as? UIImage {
+        if let userPickedImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
             
-            imageView.image = image
+            self.imageView.image = userPickedImage
             imagePicker.dismiss(animated: true, completion: nil)
-            guard let ciImage = CIImage(image: image) else {
+            guard let ciImage = CIImage(image: userPickedImage) else {
                 fatalError("couldn't convert uiimage to CIImage")
             }
             detect(image: ciImage)
@@ -78,9 +80,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     @IBAction func cameraTapped(_ sender: Any) {
-        
-        imagePicker.sourceType = .camera
-        imagePicker.allowsEditing = false
         present(imagePicker, animated: true, completion: nil)
     }
     
